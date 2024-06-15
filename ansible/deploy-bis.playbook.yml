@@ -51,6 +51,12 @@
         dest: ~/nginx/nginx.conf
       register: nginx_conf
 
+    - name: Copy files
+      copy:
+        src: ../nginx/certificate
+        dest: ~/nginx/
+        mode: 0755
+
     - name: Init docker-compose file
       template:
         src: docker-compose.yml.j2
