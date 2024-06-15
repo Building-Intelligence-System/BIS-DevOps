@@ -1,0 +1,73 @@
+---
+- hosts: bis
+  tasks:  # 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
+    - name: Git clone bis backend
+      git:
+        repo: 'https://{{ github_login }}:{{ github_token }}@github.com/Building-Intelligence-System/BIS-Backend.git'
+        dest: ~/bis-backend
+        version: main
+      register: backend_clone
+    - name: Build backend docker image
+      script: ../scripts/build_bis_backend.sh
+      when: backend_clone.changed
+#
+#    - name: Git clone device server
+#      git:
+#        repo: 'https://{{ github_login }}:{{ github_token }}@github.com/Building-Intelligence-System/device-server.git'
+#        dest: ~/bis-device-server
+#        version: main
+#      register: device_server_clone
+#    - name: Build device server docker image
+#      script: ../scripts/build_bis_device-server.sh
+#      when: device_server_clone.changed
+
+    - name: Git clone bis worker frontend
+      git:
+        repo: 'https://{{ github_login }}:{{ github_token }}@github.com/Building-Intelligence-System/BIS-Worker-Frontend.git'
+        dest: ~/bis-worker-frontend
+        version: main
+      register: worker_frontend_clone
+    - name: Build worker frontend docker image
+      script: ../scripts/build_bis_worker_frontend.sh
+      when: worker_frontend_clone.changed
+
+    - name: Git clone bis admin frontend
+      git:
+        repo: 'https://{{ github_login }}:{{ github_token }}@github.com/Building-Intelligence-System/BIS-Admin-Frontend.git'
+        dest: ~/bis-admin-frontend
+        version: main
+      register: admin_frontend_clone
+    - name: Build admin frontend docker image
+      script: ../scripts/build_bis_admin_frontend.sh
+      when: admin_frontend_clone.changed
+
+    - name: Create directory for nginx config
+      file:
+        path: ~/nginx
+        state: directory
+    - name: Copy nginx config
+      copy:
+        src: ../nginx/nginx.conf
+        dest: ~/nginx/nginx.conf
+      register: nginx_conf
+
+    - name: Init docker-compose file
+      template:
+        src: docker-compose.yml.j2
+        dest: ~/docker-compose.yml
+        mode: 0700
+      register: docker_compose
+
+    - name: Deploy
+      block:
+        - name: Tear down existing services
+          command: docker-compose down
+          args:
+            chdir: ~
+
+        - name: Create and start services
+          command: docker-compose up -d
+          args:
+            chdir: ~
+#      when: backend_clone.changed or device_server_clone.changed or worker_frontend_clone.changed or admin_frontend_clone.changed or nginx_conf.changed or docker_compose.changed
+      when: backend_clone.changed or worker_frontend_clone.changed or admin_frontend_clone.changed or nginx_conf.changed or docker_compose.changed

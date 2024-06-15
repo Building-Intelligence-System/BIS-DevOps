@@ -1,0 +1,16 @@
+---
+# [ansible]
+ansible_user: root
+ansible_host: 87.228.8.86
+
+postgres_db: bis
+postgres_user: bis
+postgres_password: bis
+
+pg_admin_email: pgadmin@bis.com
+pg_admin_password: pgadmin
+
+certbot_email: pgadmin@bis.com
+
+github_login: I1yi4
+github_token: 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
