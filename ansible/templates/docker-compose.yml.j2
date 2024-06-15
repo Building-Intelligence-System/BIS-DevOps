@@ -8,28 +8,27 @@ volumes:
     driver: local
   pgadmin_data:
     driver: local
-  nginx_letsencrypt:
-    driver: local
   backend_logs:
     driver: local
   device_server_logs:
     driver: local
+  nginx_log:
+      driver: local
 
 services:
   nginx:
-    image: jonasal/nginx-certbot:latest
-    container_name: bis-nginx
+    image: nginx:alpine
+    container_name: nginx
     restart: unless-stopped
-    environment:
-      - CERTBOT_EMAIL=pgadmin@bis.com
     ports:
       - 80:80
       - 443:443
     networks:
       - overlay
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/user_conf.d/byys.conf
-      - nginx_letsencrypt:/etc/letsencrypt
+      - /root/nginx/nginx.conf:/etc/nginx/nginx.conf
+      - /root/nginx/certificate/certificate:/etc/nginx/certificates
+      - nginx_log:/var/log/nginx
 
   worker-frontend:
     image: bis-worker-frontend:latest

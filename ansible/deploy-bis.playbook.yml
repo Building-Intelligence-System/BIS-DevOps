@@ -76,4 +76,4 @@
           args:
             chdir: ~
 #      when: backend_clone.changed or device_server_clone.changed or worker_frontend_clone.changed or admin_frontend_clone.changed or nginx_conf.changed or docker_compose.changed
-      when: backend_clone.changed or worker_frontend_clone.changed or admin_frontend_clone.changed or nginx_conf.changed or docker_compose.changed
+      when: backend_clone.changed or worker_frontend_clone.changed or admin_frontend_clone.changedor docker_compose.changed
