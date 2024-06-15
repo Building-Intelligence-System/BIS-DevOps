@@ -3,9 +3,9 @@
 ansible_user: root
 ansible_host: 87.228.8.86
 
-postgres_db: bis
-postgres_user: bis
-postgres_password: bis
+postgres_db: postgres
+postgres_user: postgres
+postgres_password: postgres
 
 pg_admin_email: pgadmin@bis.com
 pg_admin_password: pgadmin

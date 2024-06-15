@@ -21,44 +21,36 @@ services:
     container_name: bis-nginx
     restart: unless-stopped
     environment:
-      - CERTBOT_EMAIL={{ certbot_email }}
+      - CERTBOT_EMAIL=pgadmin@bis.com
     ports:
       - 80:80
       - 443:443
     networks:
       - overlay
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/user_conf.d/bis.conf
+      - ./nginx/nginx.conf:/etc/nginx/user_conf.d/byys.conf
       - nginx_letsencrypt:/etc/letsencrypt
 
   worker-frontend:
     image: bis-worker-frontend:latest
-    container_name: bis-worker-frontend
     restart: unless-stopped
-    ports:
-      - 9001:80
     networks:
       - overlay
 
   admin-frontend:
     image: bis-admin-frontend:latest
-    container_name: bis-admin-frontend
     restart: unless-stopped
-    ports:
-      - 9000:80
     networks:
       - overlay
 
-  bis-backend:
+  backend:
     image: bis-backend:latest
     container_name: bis-backend
     restart: unless-stopped
-    ports:
-      - 9999:8080
     environment:
       - JAVA_OPTIONS=-Xmx512m -Xmx2g
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://bis-postgresql:5432/{{ postgres_db }}
-      - SPRING_DATASOURCE_PASSWORD={{ postgres_password }}
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://bis-postgresql:5432/postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
     networks:
       - overlay
     volumes:
@@ -69,7 +61,7 @@ services:
     container_name: bis-device-server
     restart: unless-stopped
     environment:
-      - JAVA_OPTIONS=-Xmx512m -Xmx2g -DdataSource.serverName=bis-postgresql -DdataSource.password={{ postgres_password }}
+      - JAVA_OPTIONS=-Xmx512m -Xmx2g -DdataSource.serverName=bis-postgresql -DdataSource.password=postgres
     ports:
       - 54321:54321
     networks:
@@ -78,13 +70,13 @@ services:
       - device_server_logs:/logs
 
   postgres:
-    image: postgres:13
+    image: postgres:12
     container_name: bis-postgresql
     restart: unless-stopped
     environment:
-      - POSTGRES_DB={{ postgres_db }}
-      - POSTGRES_USER={{ postgres_user }}
-      - POSTGRES_PASSWORD={{ postgres_password }}
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
     networks:
       - overlay
     volumes:
@@ -95,8 +87,8 @@ services:
     container_name: bis-pgadmin
     restart: unless-stopped
     environment:
-      - PGADMIN_DEFAULT_EMAIL={{ pg_admin_email }}
-      - PGADMIN_DEFAULT_PASSWORD={{ pg_admin_password }}
+      - PGADMIN_DEFAULT_EMAIL=pgadmin@bis.com
+      - PGADMIN_DEFAULT_PASSWORD=pgadmin
     ports:
       - 5433:80
     networks:

@@ -10,10 +10,10 @@
     - name: Build backend docker image
       script: ../scripts/build_bis_backend.sh
       when: backend_clone.changed
-#
+
 #    - name: Git clone device server
 #      git:
-#        repo: 'https://{{ github_login }}:{{ github_token }}@github.com/Building-Intelligence-System/device-server.git'
+#        repo: 'https://{{ github_login }}:{{ github_token }}@github.com/Building-Intelligence-System/BIS-IoT-Hub.git'
 #        dest: ~/bis-device-server
 #        version: main
 #      register: device_server_clone
