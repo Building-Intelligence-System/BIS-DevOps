@@ -3,9 +3,8 @@ set -e
 
 docker pull node:lts
 
-cd /home/bis/bis-frontend
+cd ~/bis-admin-frontend
 git fetch --all
-git checkout release
 git pull --all
 
-docker build -t bis-frontend .
+docker build -t bis-admin-frontend .
